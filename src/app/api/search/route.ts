@@ -18,8 +18,15 @@ const searchSchema = z.object({
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
+    const query = searchParams.get('q') || ''
+    
+    // If no query, return empty results
+    if (!query.trim()) {
+      return NextResponse.json({ classes: [], instructors: [] })
+    }
+    
     const params = {
-      query: searchParams.get('query') || '',
+      query: query,
       type: searchParams.get('type') || 'all',
       location: searchParams.get('location') || undefined,
       craft: searchParams.get('craft') || undefined,
@@ -85,6 +92,8 @@ export async function GET(req: NextRequest) {
                 },
               },
             },
+            venue: true,
+            ageRange: true,
           },
           orderBy: { createdAt: 'desc' },
         }),
@@ -146,16 +155,8 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({
-      ...results,
-      query: validated.query,
-      type: validated.type,
-      page: validated.page,
-      limit: validated.limit,
-      hasMore: validated.type === 'classes' 
-        ? results.totalClasses > skip + validated.limit
-        : validated.type === 'instructors'
-        ? results.totalInstructors > skip + validated.limit
-        : false,
+      classes: results.classes,
+      instructors: results.instructors,
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
