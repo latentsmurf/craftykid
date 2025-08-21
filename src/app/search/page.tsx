@@ -1,6 +1,9 @@
 "use client"
 
 import { Suspense } from "react"
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic'
 import { SearchResults } from "@/components/search/search-results"
 import { SearchBar } from "@/components/search/search-bar"
 import { FeaturedSearchContent } from "@/components/search/featured-search-content"
