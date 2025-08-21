@@ -1,172 +1,238 @@
-# Crafty Kid - Parent-Kid Craft Class Marketplace
+# 🎨 Crafty Kid - Creative Marketplace Platform
 
-A Care.com-inspired marketplace for parent-kid craft classes with a robust admin-managed page builder system.
+> **Where creativity meets community** - A modern marketplace connecting families with local craft instructors.
 
-## Features
+![Crafty Kid Platform](https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80)
 
-- **Dynamic Page Builder**: Admin-managed content system with schema-driven blocks
-- **Class Marketplace**: Search, filter, and book craft classes
-- **Instructor Onboarding**: Background checks and profile management
-- **Payment Integration**: Stripe for secure payments and instructor payouts
-- **Review System**: Authenticated reviews for classes and instructors
-- **Responsive Design**: Mobile-first, accessible UI built with Tailwind CSS and shadcn/ui
+## 🌟 Overview
 
-## Tech Stack
+Crafty Kid is a comprehensive marketplace platform that connects families with local craft instructors for engaging parent-child creative experiences. Built with modern web technologies and designed for scale, it provides a complete solution for discovering, booking, and managing craft classes.
 
-- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
-- **Styling**: Tailwind CSS, shadcn/ui components
-- **Database**: PostgreSQL with Prisma ORM
-- **Payments**: Stripe
-- **Authentication**: Session-based (ready for Clerk/Auth0 integration)
+## ✨ Key Features
 
-## Getting Started
+### 🎯 **For Families**
+- **Class Discovery**: Advanced search with filters for location, age, craft type
+- **Featured Content**: Highlighted super hosts, unique classes, and trending activities
+- **Easy Booking**: Streamlined booking flow with secure payment processing
+- **Reviews & Ratings**: Verified reviews from real families
+- **Mobile Optimized**: Beautiful responsive design with touch-friendly interactions
 
-### Prerequisites
+### 👨‍🎨 **For Instructors**
+- **Comprehensive Onboarding**: 5-step verification process with background checks
+- **Class Management**: Create and manage class schedules and pricing
+- **Revenue Tracking**: 80% revenue share with automated payouts
+- **Profile Showcase**: Portfolio display with image galleries and reviews
+- **Professional Tools**: Instructor dashboard with booking management
 
-- Node.js 18+ and npm/yarn
-- PostgreSQL database
-- Stripe account (for payments)
+### 🛠️ **For Administrators**
+- **Platform Management**: Complete admin dashboard with analytics
+- **Content Management**: Schema-driven page builder for marketing content
+- **Instructor Approval**: Review and approve new instructor applications
+- **User Management**: Comprehensive user oversight and support tools
 
-### Installation
+## 🚀 Technology Stack
 
-1. Clone the repository:
-```bash
-git clone [repository-url]
-cd crafty-kid
-```
+### **Frontend**
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type safety and developer experience
+- **Tailwind CSS** - Utility-first styling with custom design system
+- **Framer Motion** - Smooth animations and micro-interactions
+- **shadcn/ui** - Modern component library
 
-2. Install dependencies:
-```bash
-npm install
-```
+### **Backend & Database**
+- **Prisma ORM** - Type-safe database toolkit
+- **PostgreSQL** - Robust relational database
+- **Supabase** - Cloud database hosting and APIs
+- **Server Actions** - Next.js server-side data mutations
 
-3. Set up environment variables:
-```bash
-cp .env.example .env.local
-```
+### **Authentication & Payments**
+- **Clerk** - User authentication with Google OAuth
+- **Stripe** - Secure payment processing and subscriptions
+- **Role-based Access** - Parent, Instructor, and Admin roles
 
-Update `.env.local` with your database credentials and API keys.
+### **Design & UX**
+- **Dark Mode** - System-aware theme switching
+- **Mobile-First** - Responsive design with touch optimization
+- **Accessibility** - WCAG compliant with proper focus management
+- **Performance** - Optimized images, lazy loading, and caching
 
-4. Set up the database:
-```bash
-# Generate Prisma client
-npm run db:generate
+## 🎨 Design System
 
-# Run migrations
-npm run db:migrate
+### **Color Palette**
+- **Primary**: Purple to Pink gradient (`from-purple-600 to-pink-600`)
+- **Backgrounds**: Semantic color system with dark mode support
+- **Accents**: Craft-specific color coding for categories
 
-# Seed the database with initial data
-npm run db:seed
-```
+### **Typography**
+- **Font**: Inter - Clean, readable, modern
+- **Scale**: Responsive typography with mobile optimization
+- **Hierarchy**: Clear information architecture
 
-5. Run the development server:
-```bash
-npm run dev
-```
+### **Components**
+- **Glassmorphism**: Backdrop blur effects for modern feel
+- **Animations**: Subtle motion design with Framer Motion
+- **Cards**: Elevated design with hover effects and shadows
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+## 📱 Mobile Experience
 
-## Project Structure
+### **Navigation**
+- **Slide-out Menu**: Premium mobile navigation with smooth animations
+- **Bottom Navigation**: Persistent access to key features
+- **Touch Optimized**: 44px minimum touch targets
 
-```
-src/
-├── app/                    # Next.js app router pages
-│   ├── (marketing)/       # Public marketing pages
-│   ├── classes/           # Class search and listings
-│   ├── dashboard/         # User dashboards
-│   └── admin/            # Admin interface
-├── components/
-│   ├── blocks/           # Page builder blocks
-│   └── ui/              # Reusable UI components
-├── lib/
-│   ├── schemas/         # Zod validation schemas
-│   ├── services/        # Business logic
-│   └── utils/          # Helper functions
-└── styles/             # Global styles
-```
+### **Responsive Design**
+- **Breakpoints**: Mobile-first with progressive enhancement
+- **Typography**: Optimized font sizes for mobile reading
+- **Interactions**: Touch-friendly gestures and feedback
 
-## Page Builder System
+## 🔧 Getting Started
 
-The admin-managed page builder allows non-technical users to:
+### **Prerequisites**
+- Node.js 18+ 
+- PostgreSQL database (Supabase recommended)
+- Clerk account for authentication
+- Stripe account for payments (optional for development)
 
-- Create and edit pages without code
-- Reorder content blocks via drag-and-drop
-- Preview changes before publishing
-- Schedule page publications
-- Manage site-wide navigation and footer
+### **Installation**
 
-### Available Blocks
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/latentsmurf/craftykid.git
+   cd craftykid
+   ```
 
-- **HeroSearch**: Homepage hero with search functionality
-- **FeaturedClasses**: Curated or auto-generated class listings
-- **TeacherSpotlight**: Instructor highlights
-- **TrustBadges**: Trust indicators and statistics
-- **Testimonials**: Customer reviews
-- **ContentSplit**: Image + content sections
-- **FAQAccordion**: Frequently asked questions
-- **BlogTeasers**: Recent blog posts
-- **CTASection**: Call-to-action banners
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-## Database Schema
+3. **Set up environment variables**:
+   ```bash
+   cp .env.example .env.local
+   # Add your database, Clerk, and Stripe keys
+   ```
 
-Key entities include:
+4. **Set up the database**:
+   ```bash
+   npm run db:migrate
+   npm run db:seed
+   ```
 
-- **User**: Parents, Instructors, and Admins
-- **Class**: Class definitions with schedules
-- **Booking**: Class reservations and payments
-- **Review**: Ratings and feedback
-- **Page**: Dynamic page content
-- **InstructorProfile**: Instructor details and verification
+5. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
 
-## Development
+Visit `http://localhost:3000` to see the application.
 
-### Database Management
-
-```bash
-# View database in Prisma Studio
-npm run db:studio
-
-# Create a new migration
-npm run db:migrate
-
-# Reset database (caution: deletes all data)
-npx prisma migrate reset
-```
-
-### Testing
+### **Environment Variables**
 
 ```bash
-# Run unit tests
-npm test
+# Database
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
 
-# Run e2e tests
-npm run test:e2e
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
+CLERK_SECRET_KEY="sk_test_..."
+
+# Stripe Payments (Optional)
+STRIPE_SECRET_KEY="sk_test_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
 ```
 
-## Deployment
+## 📊 Project Structure
 
-The application is optimized for deployment on:
+```
+crafty-kid/
+├── src/
+│   ├── app/                    # Next.js 14 App Router
+│   │   ├── (marketing)/        # Marketing pages with page builder
+│   │   ├── api/                # API routes and webhooks
+│   │   ├── auth/               # Authentication pages
+│   │   ├── booking/            # Booking flow pages
+│   │   ├── class/              # Class detail pages
+│   │   ├── dashboard/          # User dashboards (parent, instructor, admin)
+│   │   └── instructor/         # Instructor profiles and onboarding
+│   ├── components/             # Reusable UI components
+│   │   ├── blocks/             # Page builder blocks
+│   │   ├── booking/            # Booking-specific components
+│   │   ├── search/             # Search and discovery components
+│   │   └── ui/                 # Base UI components
+│   ├── lib/                    # Utilities and configurations
+│   │   ├── config/             # Site configuration
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── page-builder/       # Page builder system
+│   │   ├── schemas/            # Zod validation schemas
+│   │   └── services/           # Business logic services
+│   └── styles/                 # Global styles and CSS
+├── prisma/                     # Database schema and migrations
+├── Documentation/              # Setup guides and instructions
+└── Configuration files         # Package.json, Tailwind, etc.
+```
 
-- **Vercel**: For the Next.js frontend
-- **Neon/Supabase**: For PostgreSQL database
-- **Vercel Blob/S3**: For file storage
+## 🎯 Core Features
 
-## Security Considerations
+### **Page Builder System**
+- Schema-driven content management
+- Dynamic block rendering
+- SEO optimization
+- Version control for pages
 
-- All user inputs are validated with Zod schemas
-- CSRF protection on all mutations
-- Role-based access control (RBAC)
-- Background checks for instructors
-- PCI compliance via Stripe Checkout
+### **Booking Flow**
+1. **Discovery**: Search and browse classes
+2. **Selection**: Choose date, time, and participants
+3. **Authentication**: Sign in with Google OAuth
+4. **Payment**: Secure Stripe checkout
+5. **Confirmation**: Receipt and calendar integration
 
-## Contributing
+### **User Roles**
+- **Parents**: Book classes, manage children, leave reviews
+- **Instructors**: Create classes, manage schedules, track earnings
+- **Admins**: Platform management, content control, user oversight
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## 🔒 Security & Privacy
 
-## License
+- **Background Checks**: All instructors verified
+- **Secure Payments**: PCI-compliant Stripe integration
+- **Data Protection**: GDPR-compliant data handling
+- **Role-based Access**: Proper authorization controls
 
-This project is licensed under the MIT License.
+## 📈 Performance & SEO
+
+- **Core Web Vitals**: Optimized for Google's performance metrics
+- **Image Optimization**: Next.js automatic image optimization
+- **SEO**: Dynamic meta tags and structured data
+- **Caching**: Efficient data fetching and caching strategies
+
+## 🚀 Deployment
+
+### **Recommended Stack**
+- **Frontend**: Vercel (seamless Next.js deployment)
+- **Database**: Supabase (PostgreSQL with APIs)
+- **Authentication**: Clerk (managed auth service)
+- **Payments**: Stripe (secure payment processing)
+- **Media**: Cloudinary or similar CDN
+
+### **Production Checklist**
+- [ ] Set up production database
+- [ ] Configure live Stripe keys
+- [ ] Set up domain and SSL
+- [ ] Configure email notifications
+- [ ] Set up monitoring and analytics
+- [ ] Test payment flows end-to-end
+
+## 📝 License
+
+This project is proprietary software developed for Crafty Kid marketplace.
+
+## 🤝 Contributing
+
+This is a private project. For questions or support, contact the development team.
+
+---
+
+**Built with ❤️ for creative families everywhere**
+
+*Crafty Kid - Where creativity meets community* 🎨✨
