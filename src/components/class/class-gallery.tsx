@@ -16,8 +16,8 @@ export function ClassGallery({ images, title }: ClassGalleryProps) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-        <span className="text-gray-500">No images available</span>
+      <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+        <span className="text-muted-foreground">No images available</span>
       </div>
     )
   }
@@ -36,7 +36,7 @@ export function ClassGallery({ images, title }: ClassGalleryProps) {
       <div className="space-y-4">
         {/* Main Image */}
         <motion.div 
-          className="relative aspect-video bg-gray-200 rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-300"
+          className="relative aspect-video bg-muted rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-300"
           onClick={() => setIsModalOpen(true)}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -101,11 +101,11 @@ export function ClassGallery({ images, title }: ClassGalleryProps) {
 
           {/* Image Counter */}
           {images.length > 1 && (
-            <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {currentImage + 1} / {images.length}
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Thumbnail Strip */}
         {images.length > 1 && (

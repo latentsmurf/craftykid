@@ -32,12 +32,7 @@ const isPublicRoute = createRouteMatcher([
   '/debug',
 ]);
 
-export default clerkMiddleware((auth, req) => {
-  // Protect all routes except public ones
-  if (!isPublicRoute(req)) {
-    auth().protect();
-  }
-});
+export default clerkMiddleware();
 
 export const config = {
   matcher: [

@@ -127,6 +127,7 @@ const missingPages: Page[] = [
         title: "Success Stories",
         maxItems: 3,
         layout: "grid",
+        autoRotate: false,
       },
       {
         type: "FAQAccordion",

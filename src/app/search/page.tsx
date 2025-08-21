@@ -32,7 +32,9 @@ export default function SearchPage() {
               </Suspense>
               
               {/* Featured Content - Shows when no search is active */}
-              <FeaturedSearchContent />
+              <Suspense fallback={<div>Loading featured content...</div>}>
+                <FeaturedSearchContent />
+              </Suspense>
             </div>
           </div>
         </div>

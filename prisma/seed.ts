@@ -41,6 +41,7 @@ const homePage: Page = {
       instructorIds: ["inst_123", "inst_456", "inst_789"],
       layout: "carousel",
       maxItems: 3,
+      autoRotate: false,
     },
     {
       type: "TrustBadges",
