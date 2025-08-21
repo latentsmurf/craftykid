@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { motion } from "framer-motion"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -153,14 +153,9 @@ const popularSearches = [
   "Kids Crafts", "Family Art", "Beginner Friendly", "Weekend Classes"
 ]
 
-export function FeaturedSearchContent() {
-  const searchParams = useSearchParams()
-  const query = searchParams.get("query")
-  
-  // Only show featured content when there's no active search
-  if (query && query.trim()) {
-    return null
-  }
+function FeaturedSearchContentInner() {
+  // Always show featured content for now (search results will be handled separately)
+  // This avoids the useSearchParams issue during static generation
 
   const getBadgeInfo = (badge: string) => {
     switch (badge) {
@@ -497,5 +492,13 @@ export function FeaturedSearchContent() {
         </div>
       </motion.section>
     </div>
+  )
+}
+
+export function FeaturedSearchContent() {
+  return (
+    <Suspense fallback={<div className="text-center py-8 text-muted-foreground">Loading featured content...</div>}>
+      <FeaturedSearchContentInner />
+    </Suspense>
   )
 }
