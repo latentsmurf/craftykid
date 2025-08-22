@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,326 +11,337 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum Role {
+enum UserRole {
   PARENT
   INSTRUCTOR
   ADMIN
 }
 
 enum BookingStatus {
-  RESERVED
-  PAID
+  PENDING
+  CONFIRMED
   CANCELLED
-  REFUNDED
+  COMPLETED
 }
 
-enum BackgroundCheckStatus {
+enum VerificationStatus {
   PENDING
+  IN_REVIEW
   CLEAR
   FLAGGED
-  EXPIRED
-}
-
-enum PageStatus {
-  DRAFT
-  PUBLISHED
-  SCHEDULED
-}
-
-enum PayoutStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
 }
 
 model User {
-  id                String              @id @default(cuid())
-  email             String              @unique
-  password          String?
-  clerkId           String?             @unique
-  role              Role
-  name              String?
-  phone             String?
-  address           String?
-  marketingOptIn    Boolean             @default(false)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  
-  // Relations
-  children          Child[]
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  clerkId   String?  @unique
+  role      UserRole @default(PARENT)
+  phone     String?
+  address   String?
+  avatarUrl String?
+  bio       String?
+
+  // Relationships
+  parentProfile     ParentProfile?
   instructorProfile InstructorProfile?
   bookings          Booking[]
   reviews           Review[]
-  sessions          Session[]
-}
+  messages          Message[]
+  pages             Page[]
 
-model Child {
-  id        String   @id @default(cuid())
-  parentId  String
-  name      String
-  birthdate DateTime
-  notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  // Relations
-  parent    User     @relation(fields: [parentId], references: [id])
-  bookings  BookingChild[]
+}
+
+model ParentProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  childrenAges Int[]
+  interests    String[]
+  preferences  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model InstructorProfile {
-  id                 String                @id @default(cuid())
-  userId             String                @unique
-  bio                String?
-  crafts             String[]
-  portfolioMedia     Json?
-  verificationStatus BackgroundCheckStatus @default(PENDING)
-  ratingAvg          Float                 @default(0)
-  ratingCount        Int                   @default(0)
-  createdAt          DateTime              @default(now())
-  updatedAt          DateTime              @updatedAt
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  crafts            String[]
+  experience        Int // years
+  certifications    String[]
+  languages         String[]
+  availability      Json?
+  portfolioMedia    Json?
+  backgroundCheck   DateTime?
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt        DateTime?
   
-  // Relations
-  user               User                  @relation(fields: [userId], references: [id])
-  classes            Class[]
-  backgroundChecks   BackgroundCheck[]
-  payouts            Payout[]
-  reviews            Review[]
+  // Ratings
+  ratingAvg   Float @default(0)
+  ratingCount Int   @default(0)
+
+  // Relationships
+  classes Class[]
+  venues  Venue[]
+  reviews Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Venue {
-  id        String   @id @default(cuid())
-  name      String
-  address   String
-  lat       Float
-  lng       Float
-  capacity  Int
-  contact   String?
-  photos    Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  country     String @default("US")
   
-  // Relations
-  classes   Class[]
-  reviews   Review[]
+  description String?
+  amenities   String[]
+  images      String[]
+  capacity    Int
   
-  @@index([lat, lng])
-}
+  // Location
+  latitude  Float?
+  longitude Float?
+  
+  // Relationships
+  instructorId String
+  instructor   InstructorProfile @relation(fields: [instructorId], references: [id])
+  classes      Class[]
 
-model Category {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  icon      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  // Relations
-  classes   Class[]
 }
 
 model Class {
-  id                String   @id @default(cuid())
-  title             String
-  categoryId        String
-  ageMin            Int
-  ageMax            Int
-  description       String   @db.Text
-  instructorId      String
-  venueId           String
-  capacity          Int
-  priceCents        Int
-  materialsProvided Boolean  @default(true)
-  images            Json?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id          String @id @default(cuid())
+  title       String
+  description String
   
-  // Relations
-  category          Category          @relation(fields: [categoryId], references: [id])
-  instructor        InstructorProfile @relation(fields: [instructorId], references: [id])
-  venue             Venue             @relation(fields: [venueId], references: [id])
-  schedules         ClassSchedule[]
-  reviews           Review[]
+  // Details
+  ageMin      Int
+  ageMax      Int
+  skillLevel  String
+  maxStudents Int
+  duration    Int // minutes
+  price       Int // cents
   
-  @@index([categoryId])
-  @@index([instructorId])
-  @@index([venueId])
-  @@index([ageMin, ageMax])
+  // Media
+  images      String[]
+  materials   String[]
+  
+  // Relationships
+  instructorId String
+  instructor   InstructorProfile @relation(fields: [instructorId], references: [id])
+  
+  venueId     String
+  venue       Venue @relation(fields: [venueId], references: [id])
+  
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  
+  ageRangeId  String?
+  ageRange    AgeRange? @relation(fields: [ageRangeId], references: [id])
+  
+  schedules   ClassSchedule[]
+  bookings    Booking[]
+  reviews     Review[]
+  
+  // Status
+  isActive    Boolean @default(true)
+  isFeatured  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ClassSchedule {
-  id             String    @id @default(cuid())
-  classId        String
-  startsAt       DateTime
-  endsAt         DateTime
-  timezone       String    @default("America/New_York")
+  id      String   @id @default(cuid())
+  classId String
+  class   Class    @relation(fields: [classId], references: [id])
+  
+  startsAt DateTime
+  endsAt   DateTime
+  
   seatsTotal     Int
-  seatsRemaining Int
-  recurrenceRule String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  seatsAvailable Int
+  seatsReserved  Int @default(0)
   
-  // Relations
-  class          Class     @relation(fields: [classId], references: [id])
-  bookings       Booking[]
+  // Relationships
+  bookings Booking[]
   
-  @@index([startsAt])
-  @@index([classId])
+  isCancelled Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String @id @default(cuid())
+  name        String @unique
+  slug        String @unique
+  description String?
+  icon        String?
+  color       String?
+  
+  parentId String?
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+  
+  classes Class[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgeRange {
+  id          String @id @default(cuid())
+  name        String @unique
+  min         Int
+  max         Int
+  description String?
+  
+  classes Class[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Booking {
-  id               String        @id @default(cuid())
-  scheduleId       String
-  parentId         String
-  amountCents      Int
-  status           BookingStatus @default(RESERVED)
-  paymentIntentId  String?
-  stripeSessionId  String?
-  receiptUrl       String?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id         String        @id @default(cuid())
+  bookingRef String        @unique
   
-  // Relations
-  schedule         ClassSchedule @relation(fields: [scheduleId], references: [id])
-  parent           User          @relation(fields: [parentId], references: [id])
-  children         BookingChild[]
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
   
-  @@index([parentId])
-  @@index([scheduleId])
-  @@index([status])
-}
+  scheduleId String
+  schedule   ClassSchedule @relation(fields: [scheduleId], references: [id])
+  
+  classId    String
+  class      Class         @relation(fields: [classId], references: [id])
+  
+  status     BookingStatus @default(PENDING)
+  
+  // Participants
+  adultsCount   Int @default(1)
+  childrenCount Int @default(1)
+  childrenAges  Int[]
+  
+  // Payment
+  totalPrice    Int // cents
+  paymentIntent String?
+  paidAt        DateTime?
+  
+  // Communication
+  notes         String?
+  specialNeeds  String?
+  
+  // Timestamps
+  confirmedAt   DateTime?
+  cancelledAt   DateTime?
+  completedAt   DateTime?
 
-model BookingChild {
-  bookingId String
-  childId   String
-  
-  // Relations
-  booking   Booking @relation(fields: [bookingId], references: [id])
-  child     Child   @relation(fields: [childId], references: [id])
-  
-  @@id([bookingId, childId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Review {
-  id         String   @id @default(cuid())
-  parentId   String
-  targetType String   // "Class" | "Instructor" | "Venue"
-  targetId   String
-  rating     Int      // 1-5
-  title      String
-  body       String   @db.Text
-  verified   Boolean  @default(false)
-  flagged    Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id       String @id @default(cuid())
+  rating   Int    // 1-5
+  comment  String
   
-  // Relations
-  parent     User              @relation(fields: [parentId], references: [id])
-  class      Class?            @relation(fields: [targetId], references: [id], map: "Review_class_targetId_fkey")
-  instructor InstructorProfile? @relation(fields: [targetId], references: [id], map: "Review_instructor_targetId_fkey")
-  venue      Venue?            @relation(fields: [targetId], references: [id], map: "Review_venue_targetId_fkey")
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
   
-  @@index([targetType, targetId])
-  @@index([parentId])
-  @@index([rating])
+  classId  String?
+  class    Class? @relation(fields: [classId], references: [id])
+  
+  instructorId String?
+  instructor   InstructorProfile? @relation(fields: [instructorId], references: [id])
+  
+  bookingId String?  @unique
+  
+  isVerified Boolean @default(false)
+  helpfulCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id       String @id @default(cuid())
+  content  String
+  
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id])
+  
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  
+  isRead Boolean @default(false)
+  readAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  participants String[]
+  lastMessage  String?
+  lastMessageAt DateTime?
+  
+  messages Message[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Page {
-  id          String     @id @default(cuid())
-  slug        String     @unique
-  title       String
-  status      PageStatus @default(DRAFT)
-  seo         Json
-  blocks      Json
-  publishAt   DateTime?
-  version     Int        @default(1)
-  createdBy   String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  
-  // Relations
-  versions    PageVersion[]
-  
-  @@index([status])
-  @@index([slug])
-}
-
-model PageVersion {
   id        String   @id @default(cuid())
-  pageId    String
-  version   Int
   title     String
-  status    PageStatus
+  slug      String   @unique
   seo       Json
-  blocks    Json
-  createdBy String?
+  blocks    Json[]
+  status    String   @default("draft")
+  publishAt DateTime?
+  
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  
   createdAt DateTime @default(now())
-  
-  // Relations
-  page      Page     @relation(fields: [pageId], references: [id])
-  
-  @@unique([pageId, version])
+  updatedAt DateTime @updatedAt
 }
 
-model Asset {
-  id          String   @id @default(cuid())
-  kind        String   // "image" | "doc" | "video"
-  url         String
-  alt         String?
-  attribution String?
-  size        Int?
-  mimeType    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model BackgroundCheck {
-  id           String                @id @default(cuid())
-  instructorId String
-  provider     String
-  status       BackgroundCheckStatus
-  tokenRef     String                @unique
-  checkDetails Json?
-  expiresAt    DateTime
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
-  
-  // Relations
-  instructor   InstructorProfile     @relation(fields: [instructorId], references: [id])
-  
-  @@index([instructorId])
-  @@index([status])
-}
-
-model Payout {
-  id            String       @id @default(cuid())
-  instructorId  String
-  amountCents   Int
-  status        PayoutStatus @default(PENDING)
-  providerRef   String?
-  processedAt   DateTime?
-  failureReason String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  
-  // Relations
-  instructor    InstructorProfile @relation(fields: [instructorId], references: [id])
-  
-  @@index([instructorId])
-  @@index([status])
-}
-
-model Session {
+model BlogPost {
   id        String   @id @default(cuid())
-  userId    String
-  token     String   @unique
-  expiresAt DateTime
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  
+  featuredImage String?
+  category      String
+  tags          String[]
+  
+  seo       Json
+  status    String   @default("draft")
+  publishAt DateTime?
+  
+  authorId  String
+  
+  views     Int      @default(0)
+  
   createdAt DateTime @default(now())
-  
-  // Relations
-  user      User     @relation(fields: [userId], references: [id])
-  
-  @@index([userId])
-  @@index([token])
+  updatedAt DateTime @updatedAt
 }
