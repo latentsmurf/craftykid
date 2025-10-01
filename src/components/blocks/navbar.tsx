@@ -7,14 +7,14 @@ import { Menu, X, User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { NavBarBlock } from "@/lib/schemas/page-blocks"
 import { cn } from "@/lib/utils"
-import { useAuth } from "@/lib/hooks/useAuth"
+import { useClerkAuth } from "@/lib/hooks/useClerkAuth"
 
 export default function NavBar({
   logo,
   links,
 }: NavBarBlock) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { user, logout, isLoading } = useAuth()
+  const { user, logout, isLoading } = useClerkAuth()
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "@/lib/hooks/useAuth"
+import { useClerkAuth } from "@/lib/hooks/useClerkAuth"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +9,7 @@ import { Calendar, Users, DollarSign, Star, BookOpen, TrendingUp } from "lucide-
 import Link from "next/link"
 
 export default function InstructorDashboard() {
-  const { user, isLoading } = useAuth()
+  const { user, isLoading } = useClerkAuth()
   const router = useRouter()
 
   useEffect(() => {
