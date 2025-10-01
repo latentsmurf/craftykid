@@ -30,9 +30,12 @@ export function BlockRenderer({ block, index }: BlockRendererProps) {
     return null
   }
 
+  // Extract only serializable props, excluding type, id, className which are handled separately
+  const { type, id, className, ...componentProps } = block
+  
   return (
-    <div key={block.id || `block-${index}`} className={block.className}>
-      <Component {...block} />
+    <div key={id || `block-${index}`} className={className}>
+      <Component {...componentProps} />
     </div>
   )
 }

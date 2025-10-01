@@ -2,6 +2,7 @@
 
 import { useUser, useClerk } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 interface ClerkUser {
   id: string
@@ -11,8 +12,29 @@ interface ClerkUser {
 }
 
 export function useClerkAuth() {
-  const { user, isLoaded, isSignedIn } = useUser()
-  const { signOut } = useClerk()
+  const [hasError, setHasError] = useState(false)
+  
+  let user, isLoaded, isSignedIn, clerk
+  
+  try {
+    const userHook = useUser()
+    const clerkHook = useClerk()
+    user = userHook.user
+    isLoaded = userHook.isLoaded
+    isSignedIn = userHook.isSignedIn
+    clerk = clerkHook
+  } catch (error) {
+    console.error("Clerk initialization error:", error)
+    setHasError(true)
+    // Return safe defaults when Clerk is not properly configured
+    return {
+      user: null,
+      isLoading: false,
+      isSignedIn: false,
+      logout: async () => {},
+    }
+  }
+
   const router = useRouter()
 
   // Get role from Clerk metadata or default to PARENT
@@ -42,14 +64,18 @@ export function useClerkAuth() {
   } : null
 
   const logout = async () => {
-    await signOut()
-    router.push("/")
+    try {
+      await clerk.signOut()
+      router.push("/")
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
   }
 
   return {
     user: clerkUser,
     isLoading: !isLoaded,
-    isSignedIn,
+    isSignedIn: isSignedIn || false,
     logout,
   }
 }

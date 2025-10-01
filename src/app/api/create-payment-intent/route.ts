@@ -10,6 +10,14 @@ const createPaymentIntentSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    // Check if Stripe is configured
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Payment processing not configured' },
+        { status: 503 }
+      )
+    }
+
     const { userId } = await auth()
     
     if (!userId) {

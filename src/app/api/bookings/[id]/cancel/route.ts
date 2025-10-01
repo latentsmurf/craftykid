@@ -73,8 +73,8 @@ export async function POST(
     let refundAmount = 0
     let refundStatus = 'none'
 
-    // Handle refund if payment was made
-    if (booking.status === 'PAID' && booking.paymentIntentId) {
+    // Handle refund if payment was made and Stripe is configured
+    if (stripe && booking.status === 'PAID' && booking.paymentIntentId) {
       try {
         const paymentIntent = await stripe.paymentIntents.retrieve(booking.paymentIntentId)
         
